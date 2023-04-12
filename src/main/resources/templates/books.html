@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Библиотека</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link  type="text/html" href="/css/style.css">
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <img src="C:/Users/Nik/IdeaProjects/LibraryApp/src/main/resources/static/css/logo.png" class="d-inline-block align-top" alt="logo" width="300" height="70">
+    <a class="navbar-brand" href="#">Библиотека</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Книги</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/authors}">Авторы</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/genres}">Жанры</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/publishers}">Издатели</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <form th:action="@{/books}" method="get">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="search" placeholder="Поиск книги...">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit">Найти</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container mt-4">
+    <div class="row">
+        <!-- Здесь будет список книг -->
+        <div class="col-md-4 mb-4" th:each="book, imgStat : ${books}">
+            <div class="card h-100">
+                <img th:src="@{'data:image/jpeg;base64,' + ${encodedImages[imgStat.index]}}" class="card-img-top"
+                     alt="">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${book.name}"></h5>
+                    <div class="card-description">
+                        <p class="card-text card-description" th:text="${book.descr}"></p>
+                        <button type="button" class="btn btn-primary btn-sm show-more"
+                                onclick="toggleDescription(this)">Показать всё
+                        </button>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:text="'Автор: ' + ${book.author.fio}"></li>
+                    <li class="list-group-item" th:text="'Жанр: ' + ${book.genre.name}"></li>
+                    <li class="list-group-item" th:text="'Год: ' + ${book.publishYear}"></li>
+                    <li class="list-group-item" th:text="'ISBN: ' + ${book.isbn}"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    function toggleDescription(button) {
+        const description = button.previousElementSibling;
+        const isCollapsed = description.style.whiteSpace === "nowrap";
+
+        if (isCollapsed) {
+            description.style.whiteSpace = "normal";
+            description.style.overflow = "visible";
+            description.style.textOverflow = "clip";
+            button.textContent = "Скрыть";
+        } else {
+            description.style.whiteSpace = "nowrap";
+            description.style.overflow = "hidden";
+            description.style.textOverflow = "ellipsis";
+            button.textContent = "Показать всё";
+        }
+    }
+</script>
+
+</html>
