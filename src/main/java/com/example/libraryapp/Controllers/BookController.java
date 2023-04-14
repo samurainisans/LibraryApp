@@ -21,11 +21,13 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping("/books")
-    public String showBooks(Model model, @RequestParam(value = "search", required = false) String search) {
+    public String showBooks(Model model, @RequestParam(value = "search", required = false) String search, @RequestParam(value = "filter", required = false) String filter) {
         List<Book> books;
 
         if (search != null && !search.isEmpty()) {
             books = bookService.searchBooks(search);
+        } else if (filter != null && !filter.isEmpty()) {
+            books = bookService.filterBooks(filter);
         } else {
             books = getAllBooks().getBody();
         }
