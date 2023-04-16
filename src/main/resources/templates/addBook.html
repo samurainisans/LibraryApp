@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить книгу</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{css/style.css}">
+</head>
+<body>
+<div class="container mt-4">
+    <h2>Добавить книгу</h2>
+    <form th:action="@{/books/add}" method="post" enctype="multipart/form-data">
+        <!-- Форма для ввода данных о книге -->
+        <div class="form-group">
+            <label for="title">Название</label>
+            <input type="text" class="form-control" id="title" name="title" placeholder="Название книги">
+        </div>
+        <div class="form-group">
+            <label for="author">Автор</label>
+            <input type="text" class="form-control" id="author" name="author" placeholder="Автор книги">
+        </div>
+        <div class="form-group">
+            <label for="genre">Жанр</label>
+            <input type="text" class="form-control" id="genre" name="genre" placeholder="Жанр книги">
+        </div>
+        <div class="form-group">
+            <label for="publisher">Издатель</label>
+            <input type="text" class="form-control" id="publisher" name="publisher" placeholder="Издатель книги">
+        </div>
+        <div class="form-group">
+            <label for="year">Год издания</label>
+            <input type="text" class="form-control" id="year" name="year" placeholder="Год издания книги">
+        </div>
+        <div class="form-group">
+            <label for="isbn">ISBN</label>
+            <input type="text" class="form-control" id="isbn" name="isbn" placeholder="ISBN книги">
+        </div>
+        <div class="form-group">
+            <label for="description">Описание</label>
+            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="image">Обложка</label>
+            <input type="file" class="form-control-file" id="image" name="image">
+        </div>
+        <!-- ... -->
+        <button type="submit" class="btn btn-primary">Добавить книгу</button>
+    </form>
+</div>
+</body>
+</html>
