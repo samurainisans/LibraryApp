@@ -1,10 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Редактирование </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{css/style.css}">
 </head>
 <body>
-$END$
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <img th:src="@{img/logo.png}" class="d-inline-block align-top" alt="logo" width="300" height="70">
+    <a class="navbar-brand" href="books.html">Библиотека</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/books}">Книги</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/authors}">Авторы</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/genres}">Жанры</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/publishers}">Издатели</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/logout}">Выйти</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <h1 class="my-4">Редактирование книги</h1>
+    <form action="#" th:action="@{/books/update/{id}(id=*{id})}" th:object="${book}" method="post"
+          enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Имя:</label>
+            <input type="text" class="form-control" name="name" id="name" th:field="*{name}" required>
+        </div>
+        <div class="form-group">
+            <label for="author">Автор:</label>
+            <select class="form-control" id="author" th:field="*{author}" required>
+                <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.fio}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="publisher">Издатель:</label>
+            <select class="form-control" id="publisher" th:field="*{publisher}" required>
+                <option th:each="publisher : ${publishers}" th:value="${publisher.id}" th:text="${publisher.name}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="genre">Жанр:</label>
+            <select class="form-control" id="genre" th:field="*{genre}" required>
+                <option th:each="genre : ${genres}" th:value="${genre.id}" th:text="${genre.name}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="isbn">ISBN:</label>
+            <input type="text" class="form-control" id="isbn" th:field="*{isbn}" required>
+        </div>
+        <div class="form-group">
+            <label for="page_count">Количество страниц:</label>
+            <input type="number" class="form-control" id="page_count" th:field="*{pageCount}" required>
+        </div>
+        <div class="form-group">
+            <label for="publish_year">Дата публикации:</label>
+            <input type="number" class="form-control" id="publish_year" th:field="*{publishYear}" required>
+        </div>
+        <div class="form-group">
+            <label for="content">Наполнение книги (DOCX,TXT):</label>
+            <input type="file" class="form-control-file" id="content" name="contentFile">
+            <input type="hidden" th:field="*{content}"
+                   th:value="${T(org.apache.tomcat.util.codec.binary.Base64).encodeBase64String(book.content)}">
+        </div>
+        <div class="form-group">
+            <label>Изображение:</label>
+            <input type="file" class="form-control-file" name="imageFile">
+        </div>
+        <div class="form-group">
+            <label for="descr">Описание:</label>
+            <textarea class="form-control" id="descr" th:field="*{descr}"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Редактировать</button>
+    </form>
+</div>
 </body>
 </html>

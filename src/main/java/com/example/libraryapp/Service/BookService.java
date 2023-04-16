@@ -2,9 +2,12 @@ package com.example.libraryapp.Service;
 
 import com.example.libraryapp.Models.Book;
 import com.example.libraryapp.Repos.BookRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -67,18 +70,26 @@ public class BookService {
     }
 
     // Update
-    public Book updateBook(Book book) {
-        if (book.getId() == null || !bookRepository.existsById(book.getId())) {
-            throw new IllegalArgumentException("Book ID is required and must exist");
-        }
-        return bookRepository.save(book);
+    @Transactional
+    public void updateBook(Book book) {
+        bookRepository.save(book);
     }
 
-    //    public List<Book> searchBooks(String search) {
-//        return bookRepository.findByNameContainingIgnoreCase(search);
-//    }
     // Delete
+    @Transactional
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);
+    }
+
+    public void addBook(Book book) {
+        bookRepository.save(book);
+    }
+
+    public Book getBookById(long id) {
+        return bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id));
+    }
+
+    public void saveBook(Book book) {
+        bookRepository.save(book);
     }
 }

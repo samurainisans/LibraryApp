@@ -43,4 +43,7 @@ public class GenreService {
     }
 
 
+    public Genre findGenreById(Long genreId) {
+        return genreRepository.findById(genreId).get();
+    }
 }

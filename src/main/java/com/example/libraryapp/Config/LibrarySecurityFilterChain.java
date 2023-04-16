@@ -22,6 +22,7 @@ public class LibrarySecurityFilterChain {
         http
                 .authorizeHttpRequests()
                 .requestMatchers("/registration").permitAll()
+                .requestMatchers("/books/delete/**", "/books/edit/**", "/books/update/**", "/books/add").hasAnyAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

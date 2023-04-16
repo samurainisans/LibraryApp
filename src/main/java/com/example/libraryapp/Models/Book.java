@@ -11,50 +11,43 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @NotBlank
     @Column(name = "name")
     private String name;
-
     @Lob
-    @NotNull
+
     @Column(name = "content")
     private byte[] content;
-
     @NotNull
     @Column(name = "page_count")
     private Integer pageCount;
-
     @NotBlank
     @Column(name = "isbn")
     private String isbn;
-
     @NotNull
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "genre_id", nullable = false)
     private Genre genre;
-
     @NotNull
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "author_id", nullable = false)
     private Author author;
-
     @NotNull
     @Column(name = "publish_year")
     private Integer publishYear;
-
     @NotNull
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "publisher_id", nullable = false)
     private Publisher publisher;
-
     @Lob
     @Column(name = "image")
     private byte[] image;
-
     @Column(name = "descr")
     private String descr;
 
+    public Author getAuthor() {
+        return author;
+    }
 
     public Long getId() {
         return id;
@@ -106,9 +99,6 @@ public class Book {
         this.genre = genre;
     }
 
-    public Author getAuthor() {
-        return author;
-    }
 
     public void setAuthor(Author author) {
         this.author = author;

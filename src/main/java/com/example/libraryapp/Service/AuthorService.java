@@ -42,4 +42,7 @@ public class AuthorService {
         authorRepository.deleteById(id);
     }
 
+    public Author findAuthorById(Long authorId) {
+        return authorRepository.findById(authorId).orElse(null);
+    }
 }
