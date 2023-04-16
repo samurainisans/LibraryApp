@@ -10,17 +10,14 @@ import java.util.Optional;
 
 @Service
 public class AuthorService {
-    // Implement CRUD methods using AuthorRepository
 
     @Autowired
     private AuthorRepository authorRepository;
 
-    // Create
     public Author createAuthor(Author author) {
         return authorRepository.save(author);
     }
 
-    // Read
     public List<Author> getAllAuthors() {
         return authorRepository.findAll();
     }
@@ -37,7 +34,6 @@ public class AuthorService {
         return authorRepository.save(author);
     }
 
-    // Delete
     public void deleteAuthor(Long id) {
         authorRepository.deleteById(id);
     }

@@ -10,12 +10,9 @@ import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
 public class ErrorHandler {
-
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        // Выведите ошибку в лог или на экран
         System.err.println(ex.getMessage());
-
         return new ResponseEntity<>(status);
     }
 }

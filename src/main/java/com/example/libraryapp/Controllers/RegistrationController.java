@@ -50,21 +50,4 @@ public class RegistrationController {
         return "redirect:/login";
     }
 
-//    @PostMapping("/registration")
-//    public String addUser(User user, Map<String, Object> model) {
-//        User userFromDb = userRepository.findByUsername(user.getUsername());
-//
-//        if (userFromDb != null) {
-//            model.put("message", "User exists!");
-//            return "registration";
-//        }
-//
-//        user.setActive(true);
-//        Set<Role> roles = new HashSet<>();
-//        roles.add(roleRepository.findById(1L).get());
-//        user.setRoles(roles);
-//        userRepository.save(user);
-//
-//        return "redirect:/login";
-//    }
 }

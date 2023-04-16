@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.Arrays;
+
 // Book.java
 @Entity
 @Table(name = "book")
@@ -15,7 +17,7 @@ public class Book {
     @Column(name = "name")
     private String name;
     @Lob
-
+    @NotNull
     @Column(name = "content")
     private byte[] content;
     @NotNull
@@ -48,12 +50,9 @@ public class Book {
     public Author getAuthor() {
         return author;
     }
-
     public Long getId() {
         return id;
     }
-
-    // getters and setters
 
     public void setId(Long id) {
         this.id = id;
@@ -98,7 +97,6 @@ public class Book {
     public void setGenre(Genre genre) {
         this.genre = genre;
     }
-
 
     public void setAuthor(Author author) {
         this.author = author;

@@ -5,6 +5,7 @@ import com.example.libraryapp.Models.Book;
 import com.example.libraryapp.Models.Genre;
 import com.example.libraryapp.Models.Publisher;
 import com.example.libraryapp.Repos.AuthorRepository;
+import com.example.libraryapp.Repos.BookRepository;
 import com.example.libraryapp.Repos.GenreRepository;
 import com.example.libraryapp.Repos.PublisherRepository;
 import com.example.libraryapp.Service.AuthorService;
@@ -26,6 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -47,21 +49,12 @@ public class BookController {
     private GenreRepository genreRepository;
     @Autowired
     private PublisherRepository publisherRepository;
+    @Autowired
+    private BookRepository bookRepository;
 
     @PostMapping("/books/add")
-    public String addBook(
-            @RequestParam(name = "title") String title,
-            @RequestParam(name = "authorId") Long authorId,
-            @RequestParam(name = "genreId") Long genreId,
-            @RequestParam(name = "publisherId") Long publisherId,
-            @RequestParam(name = "year") Integer year,
-            @RequestParam(name = "isbn") String isbn,
-            @RequestParam(name = "description", required = false) String description,
-            @RequestParam(name = "pageCount") Integer pageCount, // Добавьте этот параметр
-            @RequestParam(name = "image") MultipartFile imageFile,
-            @RequestParam(name = "content") MultipartFile contentFile,
-            RedirectAttributes redirectAttributes)
-    {
+    public String addBook(@RequestParam(name = "title") String title, @RequestParam(name = "authorId") Long authorId, @RequestParam(name = "genreId") Long genreId, @RequestParam(name = "publisherId") Long publisherId, @RequestParam(name = "year") Integer year, @RequestParam(name = "isbn") String isbn, @RequestParam(name = "description", required = false) String description, @RequestParam(name = "pageCount") Integer pageCount, // Добавьте этот параметр
+                          @RequestParam(name = "image") MultipartFile imageFile, @RequestParam(name = "content") MultipartFile contentFile, RedirectAttributes redirectAttributes) {
         try {
             Book book = new Book();
             book.setName(title);
@@ -91,10 +84,10 @@ public class BookController {
             if (!contentFile.isEmpty()) {
                 String fileType = contentFile.getOriginalFilename().substring(contentFile.getOriginalFilename().lastIndexOf('.') + 1).toLowerCase();
 
-                if ("txt".equals(fileType)) {
+                if ("txt" .equals(fileType)) {
                     byte[] contentBytes = contentFile.getBytes();
                     book.setContent(contentBytes);
-                } else if ("docx".equals(fileType)) {
+                } else if ("docx" .equals(fileType)) {
                     XWPFDocument doc = new XWPFDocument(contentFile.getInputStream());
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     doc.write(out);
@@ -124,6 +117,17 @@ public class BookController {
         model.addAttribute("genres", genres);
         model.addAttribute("publishers", publishers);
         return "addBook";
+    }
+
+    @GetMapping("/books/{id}/read")
+    public String readBook(@PathVariable("id") Long id, Model model) {
+        Book book = bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id));
+        byte[] binaryContent = book.getContent();
+        String contentText = new String(binaryContent, Charset.forName("windows-1251"));
+        model.addAttribute("book", book);
+        model.addAttribute("contentText", contentText);
+
+        return "read_book";
     }
 
 

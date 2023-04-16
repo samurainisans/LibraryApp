@@ -1,7 +1,6 @@
 package com.example.libraryapp.Service;
 
 import com.example.libraryapp.Models.Genre;
-import com.example.libraryapp.Models.Publisher;
 import com.example.libraryapp.Repos.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,6 @@ public class GenreService {
     public void deleteGenre(Long id) {
         genreRepository.deleteById(id);
     }
-
 
     public Genre findGenreById(Long genreId) {
         return genreRepository.findById(genreId).get();
