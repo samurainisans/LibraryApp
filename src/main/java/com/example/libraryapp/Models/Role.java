@@ -17,7 +17,6 @@ public class Role {
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
-    // Геттеры, сеттеры, equals и hashCode
 
     public Long getId() {
         return id;
@@ -42,4 +41,6 @@ public class Role {
     public void setUsers(Set<User> users) {
         this.users = users;
     }
+
+
 }

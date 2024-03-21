@@ -15,7 +15,6 @@ public class Genre {
     @Column(name = "name")
     private String name;
 
-    // getters and setters
 
     public String getName() {
         return name;

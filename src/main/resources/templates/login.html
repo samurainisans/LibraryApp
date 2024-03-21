@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,12 +12,53 @@
 
 </head>
 <body>
-<img th:src="@{img/logo.png}" class="d-inline-block align-top" alt="logo" width="300" height="70">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" th:action="@{/books}">Библиотека</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/books}">Книги</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/authors}">Авторы</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/genres}">Жанры</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/publishers}">Издатели</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/logout}">Выйти</a>
+            </li>
+        </ul>
+    </div>
+    <div class="navbar-nav ml-auto">
+        <li sec:authorize="isAuthenticated()" class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userInfoDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span sec:authentication="name">User</span> (<span sec:authentication="principal.authorities[0].authority">Role</span>)
+            </a>
+            <div class="dropdown-menu" aria-labelledby="userInfoDropdown">
+                <a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">Выйти</a>
+            </div>
+        </li>
+        <li sec:authorize="!isAuthenticated()" class="nav-item">
+            <a class="nav-link" th:href="@{/login}">Войти</a>
+        </li>
+    </div>
+</nav>
 <div class="container">
     <div class="row mt-5">
         <div class="col-md-6 mx-auto">
             <h2>Вход</h2>
             <form method="post" th:action="@{/login}">
+                <div th:if="${loginError}" class="alert alert-danger" role="alert">
+                    Неверный логин или пароль.
+                </div>
                 <div class="form-group">
                     <label for="username">Логин</label>
                     <input type="text" class="form-control" id="username" name="username" required>
@@ -32,5 +73,6 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>

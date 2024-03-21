@@ -9,17 +9,14 @@ import java.util.List;
 
 @Service
 public class GenreService {
-    // Implement CRUD methods using BookRepository
 
     @Autowired
     private GenreRepository genreRepository;
 
-    // Create
     public Genre createGenre(Genre genre) {
         return genreRepository.save(genre);
     }
 
-    // Read
     public List<Genre> getAllGenres() {
         return genreRepository.findAll();
     }
@@ -28,7 +25,6 @@ public class GenreService {
         return genreRepository.findById(id).get();
     }
 
-    // Update
     public Genre updateGenre(Genre genre) {
         if (genre.getId() == null || !genreRepository.existsById(genre.getId())) {
             throw new IllegalArgumentException("Genre ID is required and must exist");
@@ -36,7 +32,6 @@ public class GenreService {
         return genreRepository.save(genre);
     }
 
-    // Delete
     public void deleteGenre(Long id) {
         genreRepository.deleteById(id);
     }

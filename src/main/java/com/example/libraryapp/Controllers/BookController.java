@@ -13,7 +13,6 @@ import com.example.libraryapp.Service.BookService;
 import com.example.libraryapp.Service.GenreService;
 import com.example.libraryapp.Service.PublisherService;
 import jakarta.validation.Valid;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -53,50 +50,27 @@ public class BookController {
     private BookRepository bookRepository;
 
     @PostMapping("/books/add")
-    public String addBook(@RequestParam(name = "title") String title, @RequestParam(name = "authorId") Long authorId, @RequestParam(name = "genreId") Long genreId, @RequestParam(name = "publisherId") Long publisherId, @RequestParam(name = "year") Integer year, @RequestParam(name = "isbn") String isbn, @RequestParam(name = "description", required = false) String description, @RequestParam(name = "pageCount") Integer pageCount, // Добавьте этот параметр
-                          @RequestParam(name = "image") MultipartFile imageFile, @RequestParam(name = "content") MultipartFile contentFile, RedirectAttributes redirectAttributes) {
+    public String addBook(@RequestParam(name = "title") String title, @RequestParam(name = "authorId") Long authorId, @RequestParam(name = "genreId") Long genreId, @RequestParam(name = "publisherId") Long publisherId, @RequestParam(name = "year") Integer year, @RequestParam(name = "isbn") String isbn, @RequestParam(name = "description", required = false) String description, @RequestParam(name = "pageCount") Integer pageCount, @RequestParam(name = "image") MultipartFile imageFile, RedirectAttributes redirectAttributes) {
         try {
             Book book = new Book();
             book.setName(title);
-
             Author author = authorService.findAuthorById(authorId);
             book.setAuthor(author);
-
             Genre genre = genreService.findGenreById(genreId);
             book.setGenre(genre);
-
             Publisher publisher = publisherService.findPublisherById(publisherId);
             book.setPublisher(publisher);
-
             book.setPublishYear(year);
             book.setIsbn(isbn);
             book.setDescr(description);
             book.setPageCount(pageCount);
+
             // Обработка файла изображения
             if (!imageFile.isEmpty()) {
                 byte[] imageBytes = imageFile.getBytes();
                 book.setImage(imageBytes);
             } else {
                 throw new Exception("Image file must not be empty.");
-            }
-
-            // Обработка файла контента
-            if (!contentFile.isEmpty()) {
-                String fileType = contentFile.getOriginalFilename().substring(contentFile.getOriginalFilename().lastIndexOf('.') + 1).toLowerCase();
-
-                if ("txt" .equals(fileType)) {
-                    byte[] contentBytes = contentFile.getBytes();
-                    book.setContent(contentBytes);
-                } else if ("docx" .equals(fileType)) {
-                    XWPFDocument doc = new XWPFDocument(contentFile.getInputStream());
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    doc.write(out);
-                    book.setContent(out.toByteArray());
-                } else {
-                    throw new Exception("Unsupported content file format.");
-                }
-            } else {
-                throw new Exception("Content file must not be empty.");
             }
 
             bookService.saveBook(book);
@@ -107,7 +81,6 @@ public class BookController {
         }
         return "redirect:/books";
     }
-
     @GetMapping("/books/add")
     public String showAddBookForm(Model model) {
         List<Author> authors = authorRepository.findAll();
@@ -118,18 +91,6 @@ public class BookController {
         model.addAttribute("publishers", publishers);
         return "addBook";
     }
-
-    @GetMapping("/books/{id}/read")
-    public String readBook(@PathVariable("id") Long id, Model model) {
-        Book book = bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id));
-        byte[] binaryContent = book.getContent();
-        String contentText = new String(binaryContent, Charset.forName("windows-1251"));
-        model.addAttribute("book", book);
-        model.addAttribute("contentText", contentText);
-
-        return "read_book";
-    }
-
 
     @GetMapping("/books/edit/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -147,31 +108,10 @@ public class BookController {
 
     @PostMapping("/books/update/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String updateBook(@PathVariable("id") long id, @Valid @ModelAttribute("book") Book book, BindingResult bindingResult, @RequestParam("contentFile") MultipartFile contentFile, @RequestParam("imageFile") MultipartFile imageFile, Model model) {
+    public String updateBook(@PathVariable("id") long id, @Valid @ModelAttribute("book") Book book, BindingResult bindingResult,  @RequestParam("imageFile") MultipartFile imageFile, Model model) {
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getAllErrors());
             return "editBook";
-        }
-
-        // Обработка файла контента
-        if (!contentFile.isEmpty()) {
-            try {
-                String contentFileType = contentFile.getOriginalFilename().substring(contentFile.getOriginalFilename().lastIndexOf('.') + 1).toLowerCase();
-
-                if ("txt" .equals(contentFileType)) {
-                    byte[] contentBytes = contentFile.getBytes();
-                    book.setContent(contentBytes);
-                } else if ("docx" .equals(contentFileType)) {
-                    XWPFDocument doc = new XWPFDocument(contentFile.getInputStream());
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    doc.write(out);
-                    book.setContent(out.toByteArray());
-                } else {
-                    throw new Exception("Unsupported content file format.");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
 
         // Обработка файла изображения

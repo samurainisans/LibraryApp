@@ -5,7 +5,7 @@ import com.example.libraryapp.Service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,5 +20,23 @@ public class GenreController {
         List<Genre> genres = genreService.getAllGenres();
         model.addAttribute("genres", genres);
         return "genres";
+    }
+
+    @GetMapping("/genres/add")
+    public String showAddGenreForm(Model model) {
+        model.addAttribute("genre", new Genre());
+        return "addGenre";
+    }
+
+    @PostMapping("/genres")
+    public String addGenre(@ModelAttribute Genre genre) {
+        genreService.createGenre(genre);
+        return "redirect:/genres";
+    }
+
+    @PostMapping("/genres/delete/{id}")
+    public String deleteGenre(@PathVariable Long id) {
+        genreService.deleteGenre(id);
+        return "redirect:/genres";
     }
 }

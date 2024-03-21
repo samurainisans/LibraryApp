@@ -14,6 +14,9 @@ public class AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
 
+    public void saveAuthor(Author author) {
+        authorRepository.save(author);
+    }
     public Author createAuthor(Author author) {
         return authorRepository.save(author);
     }
@@ -26,7 +29,6 @@ public class AuthorService {
         return authorRepository.findById(id);
     }
 
-    // Update
     public Author updateAuthor(Author author) {
         if (author.getId() == null || !authorRepository.existsById(author.getId())) {
             throw new IllegalArgumentException("Author ID is required and must exist");
